@@ -38,31 +38,35 @@ public class View extends JPanel{
 
 
         public void paint(Graphics g) {
-
                 Graphics2D g2D = (Graphics2D) g;
                 g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
                 g2D.clearRect(0, 0, getWidth(), getHeight());
-
+  
+                //Setting the overview window
                 float eastcoast = getWidth()-getWidth()/5;
                 float southcoast = getHeight()/5;
                 overviewRect.setRect(eastcoast,0, getWidth(), southcoast);
                 g2D.draw(overviewRect);
-
+              
+                
+                //Drawing Datavalues in Workspace
                 g2D.scale(getScale(), getScale());
-
-
+                g2D.translate(-translateX, -translateY);
                 paintDiagram(g2D);
-
-
-
+                
+                //Rewerse Transformtion
+                g2D.translate(translateX, translateY);
                 g2D.scale(1/(getScale()*5), 1/(getScale()*5));
+                
+                //Drawing frame and Data values
+                //initializing and drawing marker window (Variable in size & location)               
                 g2D.translate(eastcoast*5, 0);
-
                 marker = g2D.getClipBounds().getBounds2D();
-             marker.setRect(translateX  ,translateY, getWidth()/getScale(), getHeight()/getScale());
-             g2D.draw(marker);
+                marker.setRect(translateX  ,translateY  , getWidth()/getScale(), getHeight()/getScale());
+                g2D.draw(marker);
+                
 
-
+                
                 paintDiagram(g2D);
 
 
@@ -99,6 +103,9 @@ public class View extends JPanel{
         }
         public void updateMarker(int x, int y){
                 marker.setRect(x, y, 16, 10);
+        }
+        public Rectangle2D getOverview(){
+            return overviewRect;
         }
         public Rectangle2D getMarker(){
                 return marker;

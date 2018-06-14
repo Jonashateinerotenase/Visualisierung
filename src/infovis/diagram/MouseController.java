@@ -23,6 +23,10 @@ public class MouseController implements MouseListener,MouseMotionListener {
 	 private Element selectedElement = new None();
 	 private double mouseOffsetX;
 	 private double mouseOffsetY;
+	 
+	 private double totalmouseOffsetX;
+	 private double totalmouseOffsetY;	//weil die andere iwie scheiße is 
+	 
 	 private boolean edgeDrawMode = false;
 	 private DrawingEdge drawingEdge = null;
 	 private boolean fisheyeMode;
@@ -52,7 +56,6 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int x = e.getX();
 		int y = e.getY();
 		double scale = view.getScale();
-		
 		
 		
 		if (e.getButton() == MouseEvent.BUTTON3){
@@ -109,6 +112,8 @@ public class MouseController implements MouseListener,MouseMotionListener {
 			 */
 			mouseOffsetX = x - selectedElement.getX() * scale ;
 			mouseOffsetY = y - selectedElement.getY() * scale ;	
+			totalmouseOffsetX = x + view.getTranslateX();
+			totalmouseOffsetY = y + view.getTranslateY();
 		}
 		
 	}
@@ -168,6 +173,14 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int x = e.getX();
 		int y = e.getY();
 		double scale = view.getScale();
+		
+		view.updateTranslation(-x + totalmouseOffsetX , -y + totalmouseOffsetY );
+		
+        if(view.getTranslateX() < 0) view.setTranslateX(0);
+        if(view.getTranslateY() < 0) view.setTranslateY(0);
+
+        if(view.getTranslateX() > view.getWidth()  - (view.getWidth() /view.getScale())) view.setTranslateX(view.getWidth()  - (view.getWidth() /view.getScale()));
+        if(view.getTranslateY() > view.getHeight() - (view.getHeight()/view.getScale())) view.setTranslateY(view.getHeight() - (view.getHeight()/view.getScale()));
 		/*
 		 * Aufgabe 1.2
 		 */
