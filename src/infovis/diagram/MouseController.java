@@ -112,8 +112,8 @@ public class MouseController implements MouseListener,MouseMotionListener {
 			 */
 			mouseOffsetX = x - selectedElement.getX() * scale ;
 			mouseOffsetY = y - selectedElement.getY() * scale ;	
-			totalmouseOffsetX = x + view.getTranslateX();
-			totalmouseOffsetY = y + view.getTranslateY();
+			totalmouseOffsetX = x -(view.getMarker().getX() - view.getOverview().getX()) ;
+			totalmouseOffsetY = y -view.getMarker().getY();
 		}
 		
 	}
@@ -174,13 +174,18 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int y = e.getY();
 		double scale = view.getScale();
 		
-		view.updateTranslation(-x + totalmouseOffsetX , -y + totalmouseOffsetY );
 		
-        if(view.getTranslateX() < 0) view.setTranslateX(0);
-        if(view.getTranslateY() < 0) view.setTranslateY(0);
-
-        if(view.getTranslateX() > view.getWidth()  - (view.getWidth() /view.getScale())) view.setTranslateX(view.getWidth()  - (view.getWidth() /view.getScale()));
-        if(view.getTranslateY() > view.getHeight() - (view.getHeight()/view.getScale())) view.setTranslateY(view.getHeight() - (view.getHeight()/view.getScale()));
+		
+		if(x > view.getMarker().getX() && y < view.getMarker().getMaxY() && x < view.getMarker().getMaxX() && y > view.getMarker().getY())
+		{
+			view.updateTranslation((x -  totalmouseOffsetX)*5,(y -  totalmouseOffsetY)*5);
+			
+	        if(view.getTranslateX() < 0) view.setTranslateX(0);
+	        if(view.getTranslateY() < 0) view.setTranslateY(0);
+	
+	        if(view.getTranslateX() > view.getWidth()  - (view.getWidth() /view.getScale())) view.setTranslateX(view.getWidth()  - (view.getWidth() /view.getScale()));
+	        if(view.getTranslateY() > view.getHeight() - (view.getHeight()/view.getScale())) view.setTranslateY(view.getHeight() - (view.getHeight()/view.getScale()));
+		}
 		/*
 		 * Aufgabe 1.2
 		 */

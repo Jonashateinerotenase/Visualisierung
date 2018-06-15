@@ -47,6 +47,9 @@ public class View extends JPanel{
                 float southcoast = getHeight()/5;
                 overviewRect.setRect(eastcoast,0, getWidth(), southcoast);
                 g2D.draw(overviewRect);
+                
+                
+                
               
                 
                 //Drawing Datavalues in Workspace
@@ -54,22 +57,24 @@ public class View extends JPanel{
                 g2D.translate(-translateX, -translateY);
                 paintDiagram(g2D);
                 
+                
+                
                 //Rewerse Transformtion
                 g2D.translate(translateX, translateY);
                 g2D.scale(1/(getScale()*5), 1/(getScale()*5));
-                
-                //Drawing frame and Data values
-                //initializing and drawing marker window (Variable in size & location)               
                 g2D.translate(eastcoast*5, 0);
+                //Drawing frame and Data values
+                paintDiagram(g2D);
+                
+                
+                //initializing and drawing marker window (Variable in size & location)                 
                 marker = g2D.getClipBounds().getBounds2D();
                 marker.setRect(translateX  ,translateY  , getWidth()/getScale(), getHeight()/getScale());
                 g2D.draw(marker);
-                
+                //marker.setRect(translateX  ,translateY  , getWidth()/getScale(), getHeight()/getScale());
 
-                
-                paintDiagram(g2D);
-
-
+                //Reverse Transformtion to handle marker
+                marker.setRect(eastcoast + marker.getX()/5 ,marker.getY()/5  , (getWidth()/5)/scale, (getHeight()/5)/scale);
 
 
         }
