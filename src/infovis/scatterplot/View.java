@@ -84,7 +84,8 @@ public class View extends JPanel {
             	g2D.drawString( String.valueOf(range.getMax()) ,(20 + size * (tempX+1))-40 ,(getHeight() -8));
             	tempX++;
             }
-            for (Data d : model.getList()) {
+            for (Data d : model.getList()) 
+            {
             	Rect =  new Rectangle2D.Double(0,0,0,0);
             	for(int i = 0; i < anzval;i++)
             	{
@@ -113,6 +114,11 @@ public class View extends JPanel {
 	            	}
             	}
 			}
+            /*if(markerRectangle.getWidth() < 0)
+            {
+            	markerRectangle.setRect(markerRectangle.getX() + markerRectangle.getWidth(),markerRectangle.getY(), -markerRectangle.getWidth(),markerRectangle.getHeight() );
+            }*/
+            g2D.draw(markerRectangle);
             
 
 			
