@@ -2,6 +2,7 @@ package infovis.scatterplot;
 
 import infovis.debug.Debug;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,25 +21,6 @@ public class View extends JPanel {
 		@Override
 		public void paint(Graphics g) {
 
-	        for (String l : model.getLabels()) {
-				Debug.print(l);
-				Debug.print(",  ");
-				Debug.println("");
-			}
-	        Debug.println("ÖÖÖÖÖÖÖÖÖÖÖÖÖ");
-			for (Range range : model.getRanges()) {
-				Debug.print(range.toString());
-				Debug.print(",  ");
-				Debug.println("");
-			}
-			Debug.println("ÖÖÖÖÖÖÖÖÖÖÖÖÖ");
-			for (Data d : model.getList()) {
-				Debug.print(d.toString());
-				Debug.println("");
-			}
-	        
-			
-			
 			Graphics2D g2D = (Graphics2D) g;
             g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
             g2D.clearRect(0, 0, getWidth(), getHeight());
@@ -80,44 +62,82 @@ public class View extends JPanel {
             tempX = 0;
             for (Range range : model.getRanges())
             {
-            	g2D.drawString( String.valueOf(range.getMin()) ,20 + size * tempX ,(getHeight() -8));
-            	g2D.drawString( String.valueOf(range.getMax()) ,(20 + size * (tempX+1))-40 ,(getHeight() -8));
+            	//Maxmin below
+            	g2D.drawString( String.valueOf(range.getMin()) ,20 + size  * tempX         ,30+size*(anzval));
+            	g2D.drawString( String.valueOf(range.getMax()) ,(20 + size * (tempX+1))-40 ,30+size*(anzval));
+            	//Maxmin beneath
+            	g2D.drawString( String.valueOf(range.getMin()) ,size * anzval + 20, 30 + tempX* size);
+            	g2D.drawString( String.valueOf(range.getMax()) ,size * anzval + 20, 20 + (tempX+1)* size); 	
+            	
+            	
+            	
             	tempX++;
             }
+            
+            
+            Rect =  new Rectangle2D.Double(0,0,0,0);
+            //Fuer alle Rechtecker erstmal schauen, ob sie im marker sind & entsprechend die korrespondierende data färben
             for (Data d : model.getList()) 
             {
-            	Rect =  new Rectangle2D.Double(0,0,0,0);
+            	d.setColor(Color.BLACK);
             	for(int i = 0; i < anzval;i++)
             	{
             		for(int j = 0; j < anzval; j++)
             		{
-	            	/*Rect.setRect( 	(d.getValue(i) - 1973)*(size/(2004- 1973))*(size-(size/20))/size + 20,
-	            					(d.getValue(i) - 1973)*(size/(2004- 1973))*(size-(size/20))/size + 20,
-	            					size/20,//komplexe mathematische überlegungen um den punkt ins kästchen zu bekommen
-	            					size/20);*/
 
+			            double tempMinX = model.getRanges().get(j).getMin();
+			            double tempMaxX = model.getRanges().get(j).getMax();
 
-			            	double tempMinX = model.getRanges().get(j).getMin();
-			            	double tempMaxX = model.getRanges().get(j).getMax();
-
-			            	double tempMinY = model.getRanges().get(i).getMin();
-			            	double tempMaxY = model.getRanges().get(i).getMax();
+			            double tempMinY = model.getRanges().get(i).getMin();
+			            double tempMaxY = model.getRanges().get(i).getMax();
             			
-	                Rect.setRect( 	((d.getValue(j) - tempMinX)*(size/(tempMaxX- tempMinX))*(size-(size/20))/size + 20)+i*size,
-	                				((d.getValue(i) - tempMinY)*(size/(tempMaxY- tempMinY))*(size-(size/20))/size + 20)+j*size,
-	                				size/20,//komplexe mathematische überlegungen um den punkt ins kästchen zu bekommen
-	                				size/20);    
+		                Rect.setRect( 	((d.getValue(j) - tempMinX)*(size/(tempMaxX- tempMinX))*(size-(size/20))/size + 20)+i*size,
+		                				((d.getValue(i) - tempMinY)*(size/(tempMaxY- tempMinY))*(size-(size/20))/size + 20)+j*size,
+		                				size/20,//komplexe mathematische überlegungen um den punkt ins kästchen zu bekommen
+		                				size/20);    
+		                
+		                if(markerRectangle.contains(Rect))
+		                {
+		                	d.setColor(Color.RED);
+		                }
+           
+	            	}
+            	}          	
+            	
+            	
+            }
+            //Dann NOCHMAL ueber alle Rechtecke, um sie zu färben.
+            for (Data d : model.getList()) //Effizient ist anders.
+            {        	
+            	
+            	
+            	
+            	for(int i = 0; i < anzval;i++)
+            	{
+            		for(int j = 0; j < anzval; j++)
+            		{
+
+			            double tempMinX = model.getRanges().get(j).getMin();
+			            double tempMaxX = model.getRanges().get(j).getMax();
+
+			            double tempMinY = model.getRanges().get(i).getMin();
+			            double tempMaxY = model.getRanges().get(i).getMax();
+            			
+		                Rect.setRect( 	((d.getValue(j) - tempMinX)*(size/(tempMaxX- tempMinX))*(size-(size/20))/size + 20)+i*size,
+		                				((d.getValue(i) - tempMinY)*(size/(tempMaxY- tempMinY))*(size-(size/20))/size + 20)+j*size,
+		                				size/20,//komplexe mathematische überlegungen um den punkt ins kästchen zu bekommen
+		                				size/20);    
+
 	                
-	            	g2D.setColor(d.getColor());
-	            	g2D.fill(Rect);
-	            	g2D.draw(Rect);
+		                g2D.setColor(d.getColor());
+		                g2D.fill(Rect);
+		                g2D.draw(Rect);
+		                
 	            	}
             	}
+            	
 			}
-            /*if(markerRectangle.getWidth() < 0)
-            {
-            	markerRectangle.setRect(markerRectangle.getX() + markerRectangle.getWidth(),markerRectangle.getY(), -markerRectangle.getWidth(),markerRectangle.getHeight() );
-            }*/
+
             g2D.draw(markerRectangle);
             
 
