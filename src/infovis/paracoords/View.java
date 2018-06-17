@@ -8,13 +8,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 
 public class View extends JPanel {
 	private Model model = null;
-
+	private Rectangle2D markerRectangle = new Rectangle2D.Double(0,0,0,0); 
+	
+	 public Rectangle2D getMarkerRectangle() {
+		return markerRectangle;
+	}
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
@@ -48,25 +53,28 @@ public class View extends JPanel {
         	tempX++;
         }
         //Draw actial lines wrt Values
+
         for (Data d : model.getList()) 
         {
-
-        	for(int i = 0 ; i < anzval - 1 ; i++)
+        	Point2D[] point = new Point2D[anzval];
+        	
+        	for(int i = 0 ; i < anzval ; i++)
         	{
                 double tempMinL = model.getRanges().get(i).getMin();
                 double tempMaxL = model.getRanges().get(i).getMax();
-                double tempMinR = model.getRanges().get(i+1).getMin();
-                double tempMaxR = model.getRanges().get(i+1).getMax();
-        		g2D.drawLine(	firstLineX + i *lineDist, 
-        				
-        			
-        				
-        						(int)(0.1*getHeight() + (d.getValue(i) - tempMinL)/(tempMaxL-tempMinL) * 0.8*getHeight()), 
-        						firstLineX + (i+1)   *lineDist, 
-        						(int)(0.1*getHeight() + (d.getValue(i+1) - tempMinR)/(tempMaxR-tempMinR) * 0.8*getHeight()));
+        		point[i] = new Point2D.Double(firstLineX + i * lineDist, (int)(0.1 * getHeight() + (d.getValue(i) - tempMinL) / (tempMaxL - tempMinL) * 0.8 * getHeight() ));
+        		if(markerRectangle.contains(point[i]))
+        		{
+        			g2D.setColor(Color.RED);
+        		}
         	}
-
+        	for(int i = 0 ; i < anzval - 1 ; i++)
+        	{
+        		g2D.drawLine((int)point[i].getX(),(int)point[i].getY(),(int)point[i+1].getX(),(int)point[i+1].getY());
+        	}
+        	g2D.setColor(Color.BLACK);
         }
+        g2D.draw(markerRectangle);
 
 	}
 
