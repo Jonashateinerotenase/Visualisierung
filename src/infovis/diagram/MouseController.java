@@ -31,6 +31,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 	 private DrawingEdge drawingEdge = null;
 	 private boolean fisheyeMode;
 	 private GroupingRectangle groupRectangle;
+	 private Fisheye feye = new Fisheye();;
 	/*
 	 * Getter And Setter
 	 */
@@ -190,9 +191,8 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		 * Aufgabe 1.2
 		 */
 		if (fisheyeMode){
-			/*
-			 * handle fisheye mode interactions
-			 */
+			feye.setMouseCoords(x, y, view);
+			view.setModel(feye.transform(model, view));
 			view.repaint();
 		} else if (edgeDrawMode){
 			drawingEdge.setX(e.getX());
@@ -214,10 +214,10 @@ public class MouseController implements MouseListener,MouseMotionListener {
 	public void setFisheyeMode(boolean b) {
 		fisheyeMode = b;
 		if (b){
+
 			Debug.p("new Fisheye Layout");
-			/*
-			 * handle fish eye initial call
-			 */
+			view.setModel(feye.transform(model, view));// FISHEYE ON    FISHEYE ON    FISHEYE ON    FISHEYE ON    FISHEYE ON
+
 			view.repaint();
 		} else {
 			Debug.p("new Normal Layout");
