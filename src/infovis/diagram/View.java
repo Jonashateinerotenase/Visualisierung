@@ -76,7 +76,6 @@ public class View extends JPanel{
                 //Reverse Transformtion to handle marker
                 marker.setRect(eastcoast + marker.getX()/5 ,marker.getY()/5  , (getWidth()/5)/scale, (getHeight()/5)/scale);
 
-
         }
         private void paintDiagram(Graphics2D g2D){
                 for (Element element: model.getElements()){

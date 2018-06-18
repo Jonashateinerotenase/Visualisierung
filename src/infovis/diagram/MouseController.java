@@ -57,8 +57,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int x = e.getX();
 		int y = e.getY();
 		double scale = view.getScale();
-		
-		
+
 		if (e.getButton() == MouseEvent.BUTTON3){
 			/*
 			 * add grouped elements to the model
@@ -98,7 +97,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		
 	   
 	   if (edgeDrawMode){
-			drawingEdge = new DrawingEdge((Vertex)getElementContainingPosition(x/scale,y/scale));
+			drawingEdge = new DrawingEdge((Vertex)getElementContainingPosition(x/scale + view.getTranslateX(),y/scale + view.getTranslateY()));
 			model.addElement(drawingEdge);
 		} else if (fisheyeMode){
 			/*
@@ -107,7 +106,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 			view.repaint();
 		} else {
 			
-			selectedElement = getElementContainingPosition(x/scale,y/scale);
+			selectedElement = getElementContainingPosition(x/scale + view.getTranslateX(),y/scale + view.getTranslateY());
 			/*
 			 * calculate offset
 			 */
@@ -123,7 +122,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int y = arg0.getY();
 		
 		if (drawingEdge != null){
-			Element to = getElementContainingPosition(x, y);
+			Element to = getElementContainingPosition(x/view.getScale()+ view.getTranslateX(), y/view.getScale()+ view.getTranslateY());
 			model.addEdge(new Edge(drawingEdge.getFrom(),(Vertex)to));
 			model.removeElement(drawingEdge);
 			drawingEdge = null;
@@ -174,8 +173,7 @@ public class MouseController implements MouseListener,MouseMotionListener {
 		int x = e.getX();
 		int y = e.getY();
 		double scale = view.getScale();
-		
-		
+
 		
 		if(x > view.getMarker().getX() && y < view.getMarker().getMaxY() && x < view.getMarker().getMaxX() && y > view.getMarker().getY())
 		{
@@ -195,8 +193,8 @@ public class MouseController implements MouseListener,MouseMotionListener {
 			view.setModel(feye.transform(model, view));
 			view.repaint();
 		} else if (edgeDrawMode){
-			drawingEdge.setX(e.getX());
-			drawingEdge.setY(e.getY());
+			drawingEdge.setX(e.getX()/scale+ view.getTranslateX());
+			drawingEdge.setY(e.getY()/scale+ view.getTranslateY());
 		}else if(selectedElement != null){
 			selectedElement.updatePosition((e.getX()-mouseOffsetX)/scale, (e.getY()-mouseOffsetY) /scale);
 		}
