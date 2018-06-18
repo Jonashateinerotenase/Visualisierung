@@ -37,7 +37,7 @@ public class View extends JPanel {
         	line.setRect( firstLineX + i *lineDist ,getHeight()*0.1, 1 ,getHeight()*0.8);
         	g2D.draw(line);        	
         }
-        //Draw Labes of axis
+        //Draw Labels of axis
         int tempX = 0;
         for (String l : model.getLabels()) {
         	g2D.drawString( String.valueOf(l) ,firstLineX + lineDist  * tempX -(String.valueOf(l).length()*3)  ,(int)(getHeight()*0.1) -20);
@@ -52,10 +52,10 @@ public class View extends JPanel {
         	g2D.drawString( String.valueOf(range.getMax()) ,firstLineX + lineDist  * tempX  ,(int)(getHeight()*0.9)+20);
         	tempX++;
         }
-        //Draw actial lines wrt Values
-
+        //Draw actual lines wrt Values
         for (Data d : model.getList()) 
         {
+        	boolean isRed = false;
         	Point2D[] point = new Point2D[anzval];
         	
         	for(int i = 0 ; i < anzval ; i++)
@@ -65,12 +65,20 @@ public class View extends JPanel {
         		point[i] = new Point2D.Double(firstLineX + i * lineDist, (int)(0.1 * getHeight() + (d.getValue(i) - tempMinL) / (tempMaxL - tempMinL) * 0.8 * getHeight() ));
         		if(markerRectangle.contains(point[i]))
         		{
+        			isRed = true;
         			g2D.setColor(Color.RED);
+        	
         		}
         	}
-        	for(int i = 0 ; i < anzval - 1 ; i++)
+        	for(int i = 1 ; i < anzval ; i++)
         	{
-        		g2D.drawLine((int)point[i].getX(),(int)point[i].getY(),(int)point[i+1].getX(),(int)point[i+1].getY());
+        		g2D.drawLine((int)point[i-1].getX(),(int)point[i-1].getY(),(int)point[i].getX(),(int)point[i].getY());
+        		
+        		if(isRed) 
+        		{
+        			g2D.drawLine((int)point[i-1].getX(),(int)point[i-1].getY()+1,(int)point[i].getX(),(int)point[i].getY()+1);
+        			g2D.drawLine((int)point[i-1].getX(),(int)point[i-1].getY()-1,(int)point[i].getX(),(int)point[i].getY()-1);
+        		}
         	}
         	g2D.setColor(Color.BLACK);
         }
